@@ -6,7 +6,7 @@ It is well known that using float numbers for money calculation is inherently lo
 
 On the other hand money calculations using checked rational(quotient) and discrete(integer) numbers with properly established context are considered to be safe. Some of the core types of this library are based on rational and discrete numbers. Back to the previous example of 0.21 + 0.32, we can substitute using rational numbers 21/100 + 32/100 = 53/100 and clearly nothing is lost or created arbitrarily. Alternatively if we were to operate on the scale of "cents" we can then write in integers 21 + 32 = 53 which achieves the same result. This library aims to establish and uphold safety contract by providing contexts in which the calculations take place, the following examples will not compile(see user manual for more examples):
 
-```
+```ocaml
 let open Quotient in
 
 let qv1 = make_qv ("AUD", make_q "30/100") in     <--- AUD
@@ -16,7 +16,7 @@ let qv2 = make_qv ("GBP", make_q "20/100") in     <--- GBP
 ( + ) qv1 qv2                                      Error
 ```
 
-```
+```ocaml
 let open Discrete in
 
 let scale1 = Scale.make_scale "AUD" "dollar" (make_q "1/1") in   <--- Unit in dollar
@@ -58,7 +58,7 @@ Walkthrough core modules and types
 
 The core types for building rational and integer numbers are **Qv** and **Zv**, which are wrappers for **zarith** **Q** and **Z** types respectively. Two convenience functions **make_q** and **make_z** are provided for building these values, but otherwise can be built via the **make** function in each module:
 
-```
+```ocaml
 open Safemoney
 
 let qv = make_q "123/45" in ...
@@ -69,7 +69,7 @@ let zv = make_z "12345" in ...
 
 The **Quotient** type provides a context for rational number operations, taking a **string** of currency name and a **Qv** value:
 
-```
+```ocaml
 let open Quotient in
 let qv1 = make_qv ("AUD", make_q "30/100") in
 let qv2 = make_qv ("AUD", make_q "20/100") in
@@ -80,7 +80,7 @@ let qv2 = make_qv ("AUD", make_q "20/100") in
 
 The **Discrete** type provides a context for integer number operations, taking a **Scale** type and a **Zv** value. The Scale type takes a currency name, an unit name and a scale ratio which denote a named division with respect to the unit account of the currency, e.g. for USD the subdivision of 100 "cent" make up to 1 "dollar" of unit account, hence the ratio is 100/1 which is represented by a Qv value:
 
-```
+```ocaml
 let open Discrete in
 let scale = Scale.make_scale "USD" "cent" (make_q "100/1") in
 let dv1 = make_dv (scale, make_z "200") in
@@ -92,14 +92,14 @@ let dv2 = make_dv (scale, make_z "100") in
 
 The **Exchange** type provides a context for currency exchange mechanism, taking a source currency, destination currency and exchange rate of **Qv** value:
 
-```
+```ocaml
 let open Exchange in
 let aud_to_nzd = make_xchg ~src: "AUD" ~dst: "NZD" (make_q "4908/4503") in ...
 ```
 
 To compose exchange rate, e.g. from GBP to NZD via AUD:
 
-```
+```ocaml
 let open Exchange in
 let gbp_to_aud = make_xchg ~src: "GBP" ~dst: "AUD" (make_q "8872/4503") in
 let aud_to_nzd = make_xchg ~src: "AUD" ~dst: "NZD" (make_q "4908/4503") in
@@ -110,7 +110,7 @@ let gbp_to_nzd = ( **> ) gbp_to_aud aud_to_nzd in ...
 
 The **Custom** type provides a signature for user defined currency types, allowing items such as currency code, description of the currency, an optional hashmap of unit scales and Qv/Zv initialiser to be specified. Obviously this is an opinionated approach and the **Predefined** module relies on this signature, but users could optionally come up with their own signatures to cater for specific needs. Let's define a new module for a currency called CamelCoin™ by implementing Custom signature:
 
-```
+```ocaml
 module CAMELCOIN : Custom = struct
     let symbol = "CMC"
 
@@ -156,7 +156,7 @@ Practically in real life when calculations are **DONE** on these safe types we m
 
 The **printing_conf** specifies how the the final float number should be presented, by providing a number **Separator**, whether to print a "+" sign, number of decimal places to show and a **rounding** strategy. e.g to seal a Quotient value:
 
-```
+```ocaml
 let open Utils in
 let open Safemoney in
 //We make a value on the fly but usually it is the result of a chain of safe Qv type calculations

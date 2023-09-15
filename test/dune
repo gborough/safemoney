@@ -1,6 +1,6 @@
 (library
  (name safemoney_test)
- (libraries safemoney_lib core zarith stdint angstrom yojson)
+ (libraries safemoney_lib base core zarith ppx_expect.common ppx_expect.config ppx_expect.config_types stdint angstrom yojson)
  (inline_tests)
  (preprocess (pps ppx_jane)))
 
