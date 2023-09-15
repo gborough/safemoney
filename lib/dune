@@ -1,0 +1,7 @@
+(library
+ (public_name safemoney)
+ (name safemoney_lib)
+ (libraries core zarith stdint angstrom re2 yojson ppx_deriving_yojson.runtime)
+ (preprocess (pps ppx_jane ppx_deriving_yojson ppx_deriving.show)))
+
+ (include_subdirs unqualified)

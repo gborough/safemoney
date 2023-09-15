@@ -1,0 +1,7 @@
+(library
+ (name safemoney_test)
+ (libraries safemoney_lib core zarith stdint angstrom yojson)
+ (inline_tests)
+ (preprocess (pps ppx_jane)))
+
+ (include_subdirs unqualified)
