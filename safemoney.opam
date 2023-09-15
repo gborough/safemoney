@@ -12,9 +12,9 @@ depends: [
   "ocaml" {>= "4.14.0"}
   "core"
   "dune" {>= "3.0"}
-  "zarith"
+  "zarith" {>= "1.6"}
   "stdint"
-  "angstrom"
+  "angstrom" {>= "0.14.0"}
   "re2"
   "yojson"
   "ppx_jane"
