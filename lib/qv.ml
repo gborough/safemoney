@@ -1,3 +1,4 @@
+open Q
 open Core
 
 type t = Q.t [@@deriving compare]
