@@ -14,7 +14,7 @@
 
 (license MIT)
 
-(documentation https://github.com/gborough/safemoney/README.md)
+(documentation https://gborough.github.io/safemoney/safemoney)
 
 (package
  (name safemoney)
