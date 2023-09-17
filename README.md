@@ -159,9 +159,9 @@ The **printing_conf** specifies how the the final float number should be present
 ```ocaml
 let open Utils in
 let open Safemoney in
-//We make a value on the fly but usually it is the result of a chain of safe Qv type calculations
+(** We make a value on the fly but usually it is the result of a chain of safe Qv type calculations **)
 let qv = make_qv ("USD", make_q "1234567/7") in
-//Using a premade separator "sep_dot_comma" in Utils module
+(** Using a premade separator "sep_dot_comma" in Utils module **)
 let printing_conf = { separator = sep_dot_comma; plus_sign = true; num_of_digits = Uint8.of_int 4; rounding = Truncate } in 
 seal_quotient ~printing_conf: printing_conf ~qv: qv
 ```
