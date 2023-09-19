@@ -24,7 +24,7 @@ module Make (Qv: Qv_intf.S) (Zv: Zv_intf.S) = struct
       if Z.gt (Qv.S.num_of_q scale) Z.zero && Z.gt (Qv.S.den_of_q scale) Z.zero then true else false
 
     let make_scale symbol unit value =
-      if check_scale value then { symbol = symbol; unit = unit; value = value; }
+      if check_scale value then { symbol; unit; value; }
       else raise (ValidScaleError "Valid scale must be greater than 0")
 
     let to_showable_json x = Yojson.Safe.to_string @@ showable_to_yojson { symbol_ = x.symbol; unit_ = x.unit; value_ = Qv.S.to_str x.value }
@@ -45,7 +45,7 @@ module Make (Qv: Qv_intf.S) (Zv: Zv_intf.S) = struct
   let check_scale t1 t2 =
     if Scale.compare t1.scale t2.scale = 0 then true else false
 
-  let make_dv (scale, value) = { scale = scale; value = value; }
+  let make_dv (scale, value) = { scale; value; }
 
   let show_scale t = Printf.printf "(%s %s %s)" t.scale.symbol t.scale.unit (Qv.S.to_str t.scale.value)
 

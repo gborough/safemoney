@@ -1,7 +1,6 @@
 open Core
 open Stdint
 open Safemoney
-open Angstrom
 
 type rounding =
   | Up (** decimal digits ignored *)
@@ -138,7 +137,8 @@ let q_to_decimal ~printing_conf ~qv =
     let pad = aux "" num_of_digits "0" in
     let f_part v = Option.value (List.nth (String.split (Float.to_string v) ~on: '.') 1) ~default: "" in
     let take_digits len v =
-      match Angstrom.parse_string ~consume: Prefix (take len) v with
+      let open Angstrom in
+      match parse_string ~consume: Prefix (take len) v with
       | Ok r -> r
       | Error _ -> failwith "error parsing digits"
     in
@@ -194,7 +194,7 @@ let unsafe_decimal_to_q ~decimal ~sep =
       )
       ((char (Char.of_string sep1) >>| String.of_char) *> (take_while1 (fun c -> if Char.is_digit c then true else false) <* take_till is_eol <|> (at_end_of_input >>| fun _ -> "")))
   in
-  Angstrom.parse_string ~consume: All parser decimal
+  parse_string ~consume: All parser decimal
 (** Parse the string representation of a float value with printing configuration
     e.g. [ let sep = Separator.make_exn ('.', Some ',') in unsafe_decimal_to_q ~decimal : "+123,456.789"]
     would convert value to "123456.789"
