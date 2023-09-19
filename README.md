@@ -1,3 +1,7 @@
+[![CI](https://github.com/gborough/safemoney/actions/workflows/ci.yml/badge.svg)](https://github.com/gborough/safemoney/actions/workflows/ci.yml)
+
+Documentation: https://gborough.github.io/safemoney/safemoney
+
 # SAFEMONEY
 
 A type safe money manipulation library for ocaml, currently supporting user-defined currency types as well as all ISO4217 currency codes and major crypto currencies.
