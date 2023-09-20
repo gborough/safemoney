@@ -21,4 +21,4 @@
  (authors "Geoffrey Borough")
  (synopsis "A type safe money manipulation library")
  (description "A type safe money manipulation library")
- (depends (ocaml (>= 4.14.0)) core dune (zarith (>= 1.6)) stdint (angstrom (>= 0.14.0)) re2 yojson (ppx_jane (>= 0.16.0)) ppx_deriving ppx_yojson_conv ppx_deriving_yojson))
+ (depends (ocaml (>= 4.14.0)) core dune (zarith (>= 1.6)) stdint (angstrom (>= 0.14.0)) re2 yojson (ppx_jane (>= v0.16.0)) ppx_deriving ppx_yojson_conv ppx_deriving_yojson))
