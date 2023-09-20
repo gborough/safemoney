@@ -2,6 +2,6 @@
  (public_name safemoney)
  (name safemoney_lib)
  (libraries base base.base_internalhash_types core zarith stdint angstrom re2 yojson ppx_deriving_yojson.runtime)
- (preprocess (pps ppx_jane ppx_sexp_conv ppx_deriving_yojson ppx_deriving.show)))
+ (preprocess (pps ppx_jane ppx_deriving_yojson ppx_deriving.show)))
 
  (include_subdirs unqualified)
