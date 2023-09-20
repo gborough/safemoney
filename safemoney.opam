@@ -17,7 +17,7 @@ depends: [
   "angstrom" {>= "0.14.0"}
   "re2"
   "yojson"
-  "ppx_jane" {>= "0.16.0"}
+  "ppx_jane" {>= "v0.16.0"}
   "ppx_deriving"
   "ppx_yojson_conv"
   "ppx_deriving_yojson"
