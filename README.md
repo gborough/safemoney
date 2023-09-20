@@ -1,6 +1,6 @@
 [![CI](https://github.com/gborough/safemoney/actions/workflows/ci.yml/badge.svg)](https://github.com/gborough/safemoney/actions/workflows/ci.yml)
 
-Documentation: https://gborough.github.io/safemoney/safemoney
+API Documentation: https://gborough.github.io/safemoney/safemoney
 
 # SAFEMONEY
 
