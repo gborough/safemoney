@@ -17,7 +17,7 @@ let qv1 = make_qv ("AUD", make_q "30/100") in     <--- AUD
                                                      +
 let qv2 = make_qv ("GBP", make_q "20/100") in     <--- GBP
                                                      =
-( + ) qv1 qv2                                      Error
+qv1 + qv2                                      Error
 ```
 
 ```ocaml
@@ -31,7 +31,7 @@ let dv1 = make_dv (scale1, make_z "200") in
 
 let dv2 = make_dv (scale2, make_z "100") in                                =
 
-( + ) dv1 dv2                                                            Error
+dv1 + dv2                                                            Error
 ```
 
 Things considered to be unsafe:
@@ -77,7 +77,7 @@ The **Quotient** type provides a context for rational number operations, taking 
 let open Quotient in
 let qv1 = make_qv ("AUD", make_q "30/100") in
 let qv2 = make_qv ("AUD", make_q "20/100") in
-( + ) qv1 qv2
+qv1 + qv2
 ```
 
 ### Discrete
@@ -89,7 +89,7 @@ let open Discrete in
 let scale = Scale.make_scale "USD" "cent" (make_q "100/1") in
 let dv1 = make_dv (scale, make_z "200") in
 let dv2 = make_dv (scale, make_z "100") in
-( - ) dv1 dv2
+dv1 - dv2
 ```
 
 ### Exchange
@@ -107,7 +107,7 @@ To compose exchange rate, e.g. from GBP to NZD via AUD:
 let open Exchange in
 let gbp_to_aud = make_xchg ~src: "GBP" ~dst: "AUD" (make_q "8872/4503") in
 let aud_to_nzd = make_xchg ~src: "AUD" ~dst: "NZD" (make_q "4908/4503") in
-let gbp_to_nzd = ( **> ) gbp_to_aud aud_to_nzd in ...
+let gbp_to_nzd = gbp_to_aud **> aud_to_nzd in ...
 ```
 
 ### Custom
@@ -141,8 +141,8 @@ let qv1 = CAMELCOIN.make_qv (make_q "30/100") in
 let qv2 = CAMELCOIN.make_qv (make_q "20/100") in
 let dv1 = Core.Option.value_exn (CAMELCOIN.make_dv "cent" (make_z "200")) in
 let dv2 = Core.Option.value_exn (CAMELCOIN.make_dv "cent" (make_z "100")) in
-( - ) qv1 qv2;
-( + ) dv1 dv2;
+qv1 - qv2;
+dv1 + dv2;
 ```
 
 ### Predefined
