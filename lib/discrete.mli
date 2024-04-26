@@ -10,10 +10,9 @@ module Make (Qv : Qv_intf.S) (Zv : Zv_intf.S) : sig
 
     (** {1 Types} *)
     type t =
-      { symbol : string (** Currency Symbol *)
-      ; unit : string (** Currency Unit Name *)
-      ; value : Qv.t (** Scale Value in Rational *)
-      }
+      { symbol: string  (** Currency Symbol *)
+      ; unit: string  (** Currency Unit Name *)
+      ; value: Qv.t  (** Scale Value in Rational *) }
     [@@deriving compare]
     (** Scale Representation
 
@@ -23,64 +22,59 @@ module Make (Qv : Qv_intf.S) (Zv : Zv_intf.S) : sig
 
     (** showable for t *)
     type showable =
-      { symbol_ : string [@key "symbol"]
-      ; unit_ : string [@key "unit"]
-      ; value_ : string [@key "value"]
-      }
-    [@@deriving show, sexp, yojson]
+      { symbol_: string [@key "symbol"]
+      ; unit_: string [@key "unit"]
+      ; value_: string [@key "value"] }
+    [@@deriving show, yojson]
 
     (** {1 Construction} *)
     val make_scale : string -> string -> Qv.t -> t
     (** Construct exchange rate, e.g. make_scale "GBP" "penny" Utils.make_q("100/1") *)
 
-    (** Required scale to be position *)
     val check_scale : Qv.t -> bool
+    (** Required scale to be position *)
 
-    (** Convert t to showable rep *)
-    val to_showable_json : t -> string
+    val to_json : t -> string
+    (** Convert t to json *)
   end
 
   (** {1 Types} *)
   type t =
-    { scale : Scale.t (** Scale Setting *)
-    ; value : Zv.t (** Integer Value *)
-    }
+    {scale: Scale.t  (** Scale Setting *); value: Zv.t  (** Integer Value *)}
 
   (** showable for t *)
   type showable =
-    { scale_ : string [@key "scale"]
-    ; value_ : string [@key "value"]
-    }
-  [@@deriving show, sexp, yojson]
+    {scale_: string [@key "scale"]; value_: string [@key "value"]}
+  [@@deriving show, yojson]
 
   (** {1 Construction} *)
   val make_dv : Scale.t * Zv.t -> t
   (** Construct discrete value*)
 
-  (** Print the scale setting *)
   val show_scale : t -> unit
+  (** Print the scale setting *)
 
-  (** Print the integer value *)
   val show_val : t -> unit
+  (** Print the integer value *)
 
-  (** Print the discrete value *)
   val show_t : t -> unit
+  (** Print the discrete value *)
 
-  (** Negate a discrete integer value *)
   val neg : t -> t
+  (** Negate a discrete integer value *)
 
-  (** Return an absolute discrete integer value *)
   val abs : t -> t
+  (** Return an absolute discrete integer value *)
 
-  (** Add two discrete integer values *)
   val ( + ) : t -> t -> t
+  (** Add two discrete integer values *)
 
-  (** Substract two discrete integer values *)
   val ( - ) : t -> t -> t
+  (** Substract two discrete integer values *)
 
-  (** Multiply two discrete integer values *)
   val ( * ) : t:t -> value:Zv.t -> t
+  (** Multiply two discrete integer values *)
 
-  (** Convert t to showable rep *)
-  val to_showable_json : t -> string
+  val to_json : t -> string
+  (** Convert t to json *)
 end

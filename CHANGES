@@ -1,3 +1,13 @@
+## 0.2.0 (2024-04-26)
+
+* Removed transitive dependecies
+* Removed unnecessary sexp derive
+* Fixed Yojson derive on exceptions
+* Fixed module scopes and exports
+* Renamed library public name to Safemoney
+* Renamed module Utils to Ops and added signatures
+* Updated code examples
+
 ## 0.1.1 (2023-09-20)
 
 * Minor syntax fix and updated doc location

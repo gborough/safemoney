@@ -5,33 +5,31 @@ module Make (Qv : Qv_intf.S) : sig
 
   (** {1 Types} *)
   type t =
-    { src : string (** Source. *)
-    ; dst : string (** Destination. *)
-    ; value : Qv.t (** Exhange Rate. *)
-    }
+    { src: string  (** Source. *)
+    ; dst: string  (** Destination. *)
+    ; value: Qv.t  (** Exhange Rate. *) }
   [@@deriving compare]
 
   (** showable for t *)
   type showable =
-    { src_ : string [@key "src"]
-    ; dst_ : string [@key "dst"]
-    ; value_ : string [@key "value"]
-    }
-  [@@deriving show, sexp, yojson]
+    { src_: string [@key "src"]
+    ; dst_: string [@key "dst"]
+    ; value_: string [@key "value"] }
+  [@@deriving show, yojson]
 
   (** {1 Construction} *)
   val make_xchg : src:string -> dst:string -> Qv.t -> t
   (** Construct exchange rate, e.g. make_xchg "GBP" "AUD" Utils.make_q(19400/1000) *)
 
-  (** Print the exchange rate*)
   val show_xchg : t -> unit
+  (** Print the exchange rate*)
 
-  (** Exchange rate composition *)
   val ( **> ) : t -> t -> t
+  (** Exchange rate composition *)
 
-  (** Apply reciprocal to exchange rate. xchg_recip (xchg_recip xchg) = id *)
   val xchg_recip : t -> t
+  (** Apply reciprocal to exchange rate. xchg_recip (xchg_recip xchg) = id *)
 
-  (** Convert t to showable rep *)
-  val to_showable_json : t -> string
+  val to_json : t -> string
+  (** Convert t to json*)
 end

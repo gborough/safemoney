@@ -10,17 +10,17 @@ doc: "https://gborough.github.io/safemoney/safemoney"
 bug-reports: "https://github.com/gborough/safemoney/issues"
 depends: [
   "ocaml" {>= "4.14.0"}
-  "core"
+  "base"
   "dune" {>= "3.0"}
-  "zarith" {>= "1.6"}
+  "zarith"
   "stdint"
-  "angstrom" {>= "0.14.0"}
+  "angstrom"
   "re2"
   "yojson"
-  "ppx_jane" {>= "v0.16.0"}
   "ppx_deriving"
-  "ppx_yojson_conv"
   "ppx_deriving_yojson"
+  "ppx_jane"
+  "ppx_expect" {with-test}
   "odoc" {with-doc}
 ]
 build: [
