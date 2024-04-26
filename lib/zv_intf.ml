@@ -13,38 +13,38 @@ module type S = sig
   module S : sig
     (** {1 Construction} *)
     val make : string -> t
-    (** Constructing Z by using a private type, create a Z value from string, e.g. [from_str "123"].
+    (** Constructing Z by using a private type to only allow creation from string, e.g. [from_str "123"].
         Reason behind is to disallow a range of functions that are unsuitable for currency operations.
-        For convenience the function alias [make_z] can be used. *)
+        Helper function [make_z] is provided. *)
 
     (** showable for t *)
-    type showable = { value : string } [@@deriving show, sexp, yojson]
+    type showable = {value: string} [@@deriving show, yojson]
 
-    (** Negate a Z value *)
     val neg : t -> t
+    (** Negate a Z value *)
 
-    (** Return an absolute Z value *)
     val abs : t -> t
+    (** Return an absolute Z value *)
 
-    (** Return the sign of Z value, -1, 0, or 1 when the argument is respectively negative, null, or positive. *)
     val signum : t -> int
+    (** Return the sign of Z value, -1, 0, or 1 when the argument is respectively negative, null, or positive. *)
 
-    (** Add two Z values *)
     val add : t -> t -> t
+    (** Add two Z values *)
 
-    (** Substract two Z values *)
     val sub : t -> t -> t
+    (** Substract two Z values *)
 
-    (** Multiply two Z values *)
     val mul : t -> t -> t
+    (** Multiply two Z values *)
 
-    (** Convert a Z value to string *)
     val to_str : t -> string
+    (** Convert a Z value to string *)
 
-    (** Convert a Z value to float *)
     val to_float : t -> float
+    (** Convert a Z value to float *)
 
-    (** Convert a Q value to printable rep *)
-    val to_showable_json : t -> string
+    val to_json : t -> string
+    (** Convert a Z value to json *)
   end
 end
