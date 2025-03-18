@@ -3,6 +3,8 @@ module Exchange = Types.Exchange
 module Quotient = Types.Quotient
 module Predefined = Predefined
 module Ops = Ops
+module Qv = Qv
+module Zv = Zv
 
 let make_q v = Types.make_q v
 

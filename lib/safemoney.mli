@@ -3,6 +3,8 @@ module Exchange = Types.Exchange
 module Quotient = Types.Quotient
 module Predefined = Predefined
 module Ops = Ops
+module Qv = Qv
+module Zv = Zv
 
 val make_q : string -> Qv.t
 (** Helper function to make Qv value *)
