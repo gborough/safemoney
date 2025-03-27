@@ -25,9 +25,9 @@ qv1 + qv2                                      Error
 ```ocaml
 let open Safemoney.Discrete in
 
-let scale1 = Scale.make_scale "AUD" "dollar" (make_q "1/1") in   <--- Unit in dollar
+let scale1 = Scale.make_scale ~sym:"AUD" ~sub_unit:"dollar" (make_q "1/1") in   <--- Unit in dollar
                                                                             +
-let scale1 = Scale.make_scale "AUD" "cent" (make_q "100/1") in   <--- Unit in cents
+let scale1 = Scale.make_scale ~sym:"AUD" ~sub_unit:"cent" (make_q "100/1") in   <--- Unit in cents
 
 let dv1 = make_dv (scale1, make_z "200") in
 
@@ -54,7 +54,7 @@ Things considered to be maybe unsafe:
 
 Things consider safe:
 
-* Finalising(sealing) the rational/discrete number to float with rounding strategy as the final step of calculation. The burden of proof is with the user not to use the sealed float number for anything unsafe ops mentioned above
+* Finalising(sealing) the rational/discrete number to float with rounding strategy as the final step of calculation. The burden of proof is with the user not to use the sealed float number for any unsafe ops mentioned above
 
 ## User Manual
 
@@ -62,7 +62,7 @@ Walkthrough core modules and types
 
 ### Qv and Zv
 
-The core types for building rational and integer numbers are **Qv** and **Zv**, which are wrappers for **zarith** **Q** and **Z** types respectively. Two convenience functions **make_q** and **make_z** are provided for building these values, but otherwise can be built via the **make** function in each module:
+The core types for building rational and integer numbers are **Qv** and **Zv**, which are wrappers for **zarith** **Q** and **Z** types respectively. Two helper functions **make_q** and **make_z** are provided for building these values, but otherwise can be built via the **make** function in each module:
 
 ```ocaml
 open Safemoney
@@ -88,7 +88,7 @@ The **Discrete** type provides a context for integer number operations, taking a
 
 ```ocaml
 let open Safemoney.Discrete in
-let scale = Scale.make_scale "USD" "cent" (make_q "100/1") in
+let scale = Scale.make_scale ~sym:"USD" ~sub_unit:"cent" (make_q "100/1") in
 let dv1 = make_dv (scale, make_z "200") in
 let dv2 = make_dv (scale, make_z "100") in
 dv1 - dv2
@@ -100,15 +100,15 @@ The **Exchange** type provides a context for currency exchange mechanism, taking
 
 ```ocaml
 let open Safemoney.Exchange in
-let aud_to_nzd = make_xchg ~src: "AUD" ~dst: "NZD" (make_q "4908/4503") in ...
+let aud_to_nzd = make_xchg ~src:"AUD" ~dst:"NZD" (make_q "4908/4503") in ...
 ```
 
 To compose exchange rate, e.g. from GBP to NZD via AUD:
 
 ```ocaml
 let open Safemoney.Exchange in
-let gbp_to_aud = make_xchg ~src: "GBP" ~dst: "AUD" (make_q "8872/4503") in
-let aud_to_nzd = make_xchg ~src: "AUD" ~dst: "NZD" (make_q "4908/4503") in
+let gbp_to_aud = make_xchg ~src:"GBP" ~dst:"AUD" (make_q "8872/4503") in
+let aud_to_nzd = make_xchg ~src:"AUD" ~dst:"NZD" (make_q "4908/4503") in
 let gbp_to_nzd = gbp_to_aud **> aud_to_nzd in ...
 ```
 
@@ -126,17 +126,17 @@ module CAMELCOIN : Custom = struct
 
     let units =
     let table = Hashtbl.create (module String) in
-    let hoof = Discrete.Scale.make_scale symbol "hoof" (Utils.make_q "1/1") in
-    let hump = Discrete.Scale.make_scale symbol "hump" (Utils.make_q "100/1") in
-    Hashtbl.set table ~key: "hoof" ~data: hoof;
-    Hashtbl.set table ~key: "hump" ~data: hump;
+    let hoof = Discrete.Scale.make_scale ~sym:symbol ~sub_unit:"hoof" (Utils.make_q "1/1") in
+    let hump = Discrete.Scale.make_scale ~sym:symbol ~sub_unit:"hump" (Utils.make_q "100/1") in
+    Hashtbl.set table ~key: "hoof" ~data:hoof;
+    Hashtbl.set table ~key: "hump" ~data:hump;
     Some table
 
     let make_qv qv = Quotient.make_qv (symbol, qv)
 
     let make_dv unit dv =
     match units with
-    | Some tbl -> let s = Option.value_exn ~message: "Error retriving non-existent scale" @@ Hashtbl.find tbl unit in Some (Discrete.make_dv (s, dv))
+    | Some tbl -> let s = Option.value_exn ~message:"Error retriving non-existent scale" @@ Hashtbl.find tbl unit in Some (Discrete.make_dv (s, dv))
     | None -> None
 end
 
@@ -155,7 +155,7 @@ The **Predefined** module includes readily made ISO4217 currencies and major cry
 
 ### Sealing Operations
 
-Practically in real life when calculations are **DONE** on these safe types we might want to convert them to the float representations along with a conversion strategies, effectively sealing the operations/presenting the final result, and promise not to use it further. The **Ops** module provides such sealing functions and their effective signatures are:
+Practically in real life when calculations are **DONE** on these safe types we might want to convert them to the float representations along with a conversion strategies, effectively sealing the operations/presenting the final result, and promise not to be tempered with. The **Ops** module provides such sealing functions and their effective signatures are:
 
 * seal_quotient -> (val seal_quotient: printing_conf:printing_conf -> qv:Safemoney.Quotient.t -> string)
 * seal_discrete -> (val seal_discrete: printing_conf:printing_conf -> dv:Safemoney.Discrete.t -> string)
@@ -173,11 +173,11 @@ let qv = make_qv ("USD", make_q "1234567/7") in
 (** Using a premade separator "sep_dot_comma" in Utils module **)
 let printing_conf = make_printing_conf ~sep:(sep_dot_comma ()) ~plus_sign:true ~num_of_digits:4 ~rounding:Truncate
 in 
-seal_quotient ~printing_conf: printing_conf ~qv: qv
+seal_quotient ~printing_conf:printing_conf ~qv:qv
 ```
 would print "+176,366.7142"
 
-Note the sealed result is a **String** to discourage further usage
+Note the sealed result is a **String** to discourage further alteration
 
 ### Unsafe
 
@@ -188,7 +188,7 @@ This library does provide escape hatches to allow float values from unsafe part 
 * unsafe_float_to_exchange
 * unsafe_float_to_scale
 
-Note the float value is taken as **String** to encourage "finalisation" on previously unsafe float. To guide the functions on how to correctly recognise the separator the correct one should be provided or parser error is thrown.
+Note the float value is taken as **String** to encourage "finalisation" on previously unsafe float. To guide the functions on how to correctly recognise the separator, the correct one should be provided or parser error is thrown.
 
 ## License
 

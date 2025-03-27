@@ -1,20 +1,19 @@
+open Sexplib.Std
+
 module Make (Qv : Qv_intf.S) (Zv : Zv_intf.S) = struct
   exception ScaleTypeMismatch of string
 
   module Scale = struct
     exception ValidScaleError of string
 
-    type t =
-      { symbol: string [@compare.ignore]
-      ; unit: string [@compare.ignore]
-      ; value: Qv.t }
-    [@@deriving compare]
+    type t = {symbol_: string; sub_unit_: string; value_: Qv.t}
 
     type showable =
-      { symbol_: string [@key "symbol"]
-      ; unit_: string [@key "unit"]
-      ; value_: string [@key "value"] }
-    [@@deriving show, yojson]
+      { kind: string [@key "kind"]
+      ; symbol: string [@key "symbol"]
+      ; sub_unit: string [@key "sub_unit"]
+      ; value: string [@key "value"] }
+    [@@deriving yojson, sexp]
 
     let check_scale scale =
       if
@@ -23,59 +22,85 @@ module Make (Qv : Qv_intf.S) (Zv : Zv_intf.S) = struct
       then true
       else false
 
-    let make_scale symbol unit value =
-      if check_scale value then {symbol; unit; value}
+    let make_scale ~sym ~sub_unit value_ =
+      if check_scale value_ then {symbol_= sym; sub_unit_= sub_unit; value_}
       else raise (ValidScaleError "Valid scale must be greater than 0")
 
-    let to_json x =
+    let to_json t =
       Yojson.Safe.to_string
       @@ showable_to_yojson
-           {symbol_= x.symbol; unit_= x.unit; value_= Qv.S.to_str x.value}
+           { kind= "scale_value"
+           ; symbol= t.symbol_
+           ; sub_unit= t.sub_unit_
+           ; value= Qv.S.to_str t.value_ }
+
+    let showable_of_t t =
+      { kind= "scale_value"
+      ; symbol= t.symbol_
+      ; sub_unit= t.sub_unit_
+      ; value= Qv.S.to_str t.value_ }
+
+    let to_sexp t = sexp_of_showable @@ showable_of_t t
   end
 
-  type t = {scale: Scale.t; value: Zv.t} [@@deriving compare]
+  type t = {scale_: Scale.t; value_: Zv.t}
 
   type showable =
-    { scale_: string [@key "discrete_scale"]
-    ; value_: string [@key "discrete_value"] }
-  [@@deriving show, yojson]
+    { kind: string [@key "kind"]
+    ; symbol: string [@key "symbol"]
+    ; sub_unit: string [@key "sub_unit"]
+    ; s_value: string [@key "scale_value"]
+    ; value: string [@key "discrete_value"] }
+  [@@deriving yojson, sexp]
 
-  let check_scale t1 t2 =
-    if Scale.compare t1.scale t2.scale = 0 then true else false
+  let check_scale t1 t2 = if t1.scale_ == t2.scale_ then true else false
 
-  let make_dv (scale, value) = {scale; value}
+  let make_dv (scale_, value_) = {scale_; value_}
 
   let show_scale t =
-    Printf.printf "(%s %s %s)" t.scale.symbol t.scale.unit
-      (Qv.S.to_str t.scale.value)
+    Printf.printf "(%s %s %s)" t.scale_.symbol_ t.scale_.sub_unit_
+      (Qv.S.to_str t.scale_.value_)
 
-  let show_val t = Printf.printf "%s" (Zv.S.to_str t.value)
+  let show_val t = Printf.printf "%s" (Zv.S.to_str t.value_)
 
   let show_t t =
-    Printf.printf "(%s %s %s %s)" t.scale.symbol t.scale.unit
-      (Qv.S.to_str t.scale.value)
-      (Zv.S.to_str t.value)
+    Printf.printf "(%s %s %s %s)" t.scale_.symbol_ t.scale_.sub_unit_
+      (Qv.S.to_str t.scale_.value_)
+      (Zv.S.to_str t.value_)
 
-  let neg t = {t with value= Zv.S.neg t.value}
+  let neg t = {t with value_= Zv.S.neg t.value_}
 
-  let abs t = {t with value= Zv.S.abs t.value}
+  let abs t = {t with value_= Zv.S.abs t.value_}
 
   let ( + ) t1 t2 =
-    if check_scale t1 t2 then {t1 with value= Zv.S.add t1.value t2.value}
+    if check_scale t1 t2 then {t1 with value_= Zv.S.add t1.value_ t2.value_}
     else
       raise
         (ScaleTypeMismatch "cannot operate on two different currency scales")
 
   let ( - ) t1 t2 =
-    if check_scale t1 t2 then {t1 with value= Zv.S.sub t1.value t2.value}
+    if check_scale t1 t2 then {t1 with value_= Zv.S.sub t1.value_ t2.value_}
     else
       raise
         (ScaleTypeMismatch "cannot operate on two different currency scales")
 
-  let ( * ) ~t ~value = {t with value= Zv.S.mul t.value value}
+  let ( * ) t value = {t with value_= Zv.S.mul t.value_ value}
 
-  let to_json x =
+  let to_json t =
     Yojson.Safe.to_string
     @@ showable_to_yojson
-         {scale_= Scale.to_json x.scale; value_= Zv.S.to_json x.value}
+         { kind= "discrete_value"
+         ; symbol= t.scale_.symbol_
+         ; sub_unit= t.scale_.sub_unit_
+         ; s_value= Qv.S.to_str t.scale_.value_
+         ; value= Zv.S.to_str t.value_ }
+
+  let showable_of_t t =
+    { kind= "discrete_value"
+    ; symbol= t.scale_.symbol_
+    ; sub_unit= t.scale_.sub_unit_
+    ; s_value= Qv.S.to_str t.scale_.value_
+    ; value= Zv.S.to_str t.value_ }
+
+  let to_sexp t = sexp_of_showable @@ showable_of_t t
 end
