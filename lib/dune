@@ -6,7 +6,7 @@
   zarith
   stdint
   angstrom
-  re2
+  re
   yojson
   ppx_deriving_yojson.runtime)
  (preprocess

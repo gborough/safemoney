@@ -30,7 +30,7 @@
   stdint
   (angstrom
    (>= 0.16.0))
-  re2
+  re
   yojson
   ppx_deriving
   ppx_deriving_yojson

@@ -24,8 +24,8 @@ module S = struct
   let div t1 t2 = Q.div t1 t2
 
   let make str =
-    let pat = Re2.create_exn "^-?[0-9]*/?-?[0-9]*?$" in
-    match Re2.matches pat str with
+    let pat = Re.Pcre.regexp "^-?[0-9]+/+-?[0-9]+?$" in
+    match Re.Pcre.pmatch ~rex:pat str with
     | true -> (
         let q = Q.of_string str in
         match Q.classify q with
