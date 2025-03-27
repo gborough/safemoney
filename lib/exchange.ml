@@ -1,29 +1,28 @@
+open Sexplib.Std
+
 module Make (Qv : Qv_intf.S) = struct
   exception IntermediaryMismatch of string
 
-  type t =
-    { src: string [@compare.ignore]
-    ; dst: string [@compare.ignore]
-    ; value: Qv.t }
-  [@@deriving compare]
+  type t = {src_: string; dst_: string; value_: Qv.t}
 
   type showable =
-    { src_: string [@key "src"]
-    ; dst_: string [@key "dst"]
-    ; value_: string [@key "value"] }
-  [@@deriving show, yojson]
+    { kind: string [@key "kind"]
+    ; src: string [@key "src"]
+    ; dst: string [@key "dst"]
+    ; value: string [@key "value"] }
+  [@@deriving yojson, sexp]
 
   let make_xchg ~src ~dst value =
     let value = Qv.S.abs value in
-    {src; dst; value}
+    {src_= src; dst_= dst; value_= value}
 
   let show_xchg t =
-    Printf.printf "Exchange rate from %s to %s: %s" t.src t.dst
-      (Qv.S.to_str t.value)
+    Printf.printf "Exchange rate from %s to %s: %s" t.src_ t.dst_
+      (Qv.S.to_str t.value_)
 
   let ( **> ) t1 t2 =
-    if String.compare t1.dst t2.src = 0 then
-      {src= t1.src; dst= t2.dst; value= Qv.S.mul t1.value t2.value}
+    if String.compare t1.dst_ t2.src_ = 0 then
+      {src_= t1.src_; dst_= t2.dst_; value_= Qv.S.mul t1.value_ t2.value_}
     else
       raise
         (IntermediaryMismatch
@@ -31,10 +30,21 @@ module Make (Qv : Qv_intf.S) = struct
             exchange rate" )
 
   let xchg_recip t =
-    {src= t.dst; dst= t.src; value= Qv.S.div (Qv.S.one ()) t.value}
+    {src_= t.dst_; dst_= t.src_; value_= Qv.S.div (Qv.S.one ()) t.value_}
 
-  let to_json x =
+  let to_json t =
     Yojson.Safe.to_string
     @@ showable_to_yojson
-         {src_= x.src; dst_= x.dst; value_= Qv.S.to_str x.value}
+         { kind= "exchange_rate"
+         ; src= t.src_
+         ; dst= t.dst_
+         ; value= Qv.S.to_str t.value_ }
+
+  let showable_of_t t =
+    { kind= "exchange_rate"
+    ; src= t.src_
+    ; dst= t.dst_
+    ; value= Qv.S.to_str t.value_ }
+
+  let to_sexp t = sexp_of_showable @@ showable_of_t t
 end

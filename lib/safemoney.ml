@@ -4,10 +4,10 @@ module Quotient = Types.Quotient
 module Predefined = Predefined
 module Ops = Ops
 
-let make_q v = Types.make_q v
+let make_q str = Types.make_q str
 
-let make_z v = Types.make_z v
+let make_z str = Types.make_z str
 
-let qv_to_str s = Types.q_to_str s
+let qv_to_str qv = Types.q_to_str qv
 
-let zv_to_str s = Types.z_to_str s
+let zv_to_str zv = Types.z_to_str zv

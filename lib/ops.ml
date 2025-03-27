@@ -82,8 +82,8 @@ let mark_thousands ~v ~sep =
     Sequence.fold ~init:"" ~f:(Fn.flip ( ^ ))
       (Sequence.unfold ~init:v ~f:(fun i -> aux ~sep ~i))
 
-let q_to_decimal ~printing_conf ~qv =
-  let qv = Qv.S.to_float qv in
+let q_to_decimal ~printing_conf ~q =
+  let qv = Qv.S.to_float q in
   let sep1 = Separator.fst printing_conf.separator in
   let sep2 =
     Option.value (Separator.snd printing_conf.separator) ~default:""
@@ -155,23 +155,23 @@ let q_to_decimal ~printing_conf ~qv =
 
 (** Unsafely convert a float/decimal value of string rep to integer value.
     It is unsafe in a sense that the origin of float/decimal is deemed to
-    be unverified by default and might be as a result of lossy operations. *)
+    be unverified by default and might be as a result of lossy operations *)
 let unsafe_integer_to_z integer = Z.to_string @@ Z.of_int integer
 
 let seal_quotient ~printing_conf ~(qv : Quotient.t) =
-  q_to_decimal ~printing_conf ~qv:qv.value
+  q_to_decimal ~printing_conf ~q:qv.value_
 
 let seal_discrete ~printing_conf ~(dv : Discrete.t) =
   let z_to_q =
-    Qv.S.div (Qv.S.make (Zv.S.to_str dv.value ^ "/1")) dv.scale.value
+    Qv.S.div (Qv.S.make (Zv.S.to_str dv.value_ ^ "/1")) dv.scale_.value_
   in
-  q_to_decimal ~printing_conf ~qv:z_to_q
+  q_to_decimal ~printing_conf ~q:z_to_q
 
 let seal_exchange ~printing_conf ~(xchg : Exchange.t) =
-  q_to_decimal ~printing_conf ~qv:xchg.value
+  q_to_decimal ~printing_conf ~q:xchg.value_
 
 let seal_scale ~printing_conf ~(scale : Discrete.Scale.t) =
-  q_to_decimal ~printing_conf ~qv:scale.value
+  q_to_decimal ~printing_conf ~q:scale.value_
 
 let unsafe_decimal_to_q ~decimal ~sep =
   let sep1 = Separator.fst sep in
@@ -222,7 +222,7 @@ let unsafe_float_to_exchange ~src ~dst ~decimal ~sep =
   | Ok qv -> Exchange.make_xchg ~src ~dst (Qv.S.make qv)
   | Error msg -> failwith msg
 
-let unsafe_float_to_scale ~symbol ~unit ~decimal ~sep =
+let unsafe_float_to_scale ~sym ~sub_unit ~decimal ~sep =
   match unsafe_decimal_to_q ~decimal ~sep with
-  | Ok qv -> Discrete.Scale.make_scale symbol unit (Qv.S.make qv)
+  | Ok qv -> Discrete.Scale.make_scale ~sym ~sub_unit (Qv.S.make qv)
   | Error msg -> failwith msg

@@ -1,4 +1,4 @@
-type t = Q.t [@@deriving compare]
+type t = Q.t
 
 exception NonsensicalQuotientValue of string
 
@@ -7,23 +7,21 @@ exception DenominatorZero of string
 exception NonQuotientRep of string
 
 module S = struct
-  type showable = {value: string} [@@deriving show, yojson]
-
   let one () = Q.one
 
-  let neg x = Q.neg x
+  let neg t = Q.neg t
 
-  let abs x = Q.abs x
+  let abs t = Q.abs t
 
-  let signum x = Q.sign x
+  let signum t = Q.sign t
 
-  let add x y = Q.add x y
+  let add t1 t2 = Q.add t1 t2
 
-  let sub x y = Q.sub x y
+  let sub t1 t2 = Q.sub t1 t2
 
-  let mul x y = Q.mul x y
+  let mul t1 t2 = Q.mul t1 t2
 
-  let div x y = Q.div x y
+  let div t1 t2 = Q.div t1 t2
 
   let make str =
     let pat = Re2.create_exn "^-?[0-9]*/?-?[0-9]*?$" in
@@ -46,16 +44,13 @@ module S = struct
           (NonQuotientRep
              "only quotient representation allowed, e.g. 123/456" )
 
-  let num_of_q x = Q.num x
+  let num_of_q t = Q.num t
 
-  let den_of_q x = Q.den x
+  let den_of_q t = Q.den t
 
-  let to_str x =
-    if Z.compare (den_of_q x) Z.one = 0 then Q.to_string x ^ "/1"
-    else Q.to_string x
+  let to_str t =
+    if Z.compare (den_of_q t) Z.one = 0 then Q.to_string t ^ "/1"
+    else Q.to_string t
 
-  let to_float x = Q.to_float x
-
-  let to_json x =
-    Yojson.Safe.to_string @@ showable_to_yojson {value= to_str x}
+  let to_float t = Q.to_float t
 end

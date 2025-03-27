@@ -10,71 +10,62 @@ module Make (Qv : Qv_intf.S) (Zv : Zv_intf.S) : sig
 
     (** {1 Types} *)
     type t =
-      { symbol: string  (** Currency Symbol *)
-      ; unit: string  (** Currency Unit Name *)
-      ; value: Qv.t  (** Scale Value in Rational *) }
-    [@@deriving compare]
-    (** Scale Representation
+      { symbol_: string  (** currency symbol *)
+      ; sub_unit_: string  (** currency unit name *)
+      ; value_: Qv.t  (** scale value in rational *) }
+    (** Type of scale
 
         Almost every currency has a unit value and sub unit values
         e.g. Pound is unit value for GBP with a scale of 1 to 1
-        Penny is sub unit value for GBP with scale of 100 to 1. *)
-
-    (** showable for t *)
-    type showable =
-      { symbol_: string [@key "symbol"]
-      ; unit_: string [@key "unit"]
-      ; value_: string [@key "value"] }
-    [@@deriving show, yojson]
+        Penny is sub unit value for GBP with scale of 100 to 1 *)
 
     (** {1 Construction} *)
-    val make_scale : string -> string -> Qv.t -> t
-    (** Construct exchange rate, e.g. make_scale "GBP" "penny" Utils.make_q("100/1") *)
-
-    val check_scale : Qv.t -> bool
-    (** Required scale to be position *)
+    val make_scale : sym:string -> sub_unit:string -> Qv.t -> t
+    (** [make_scale symbol subunit qv] makes exchange rate, e.g. make_scale "GBP" "penny" make_q("100/1") *)
 
     val to_json : t -> string
-    (** Convert t to json *)
+    (** [to_json t] converts t to json *)
+
+    val to_sexp : t -> Base.Sexp.t
+    (** [to_sexp t] converts t to sexp *)
   end
 
   (** {1 Types} *)
   type t =
-    {scale: Scale.t  (** Scale Setting *); value: Zv.t  (** Integer Value *)}
-
-  (** showable for t *)
-  type showable =
-    {scale_: string [@key "scale"]; value_: string [@key "value"]}
-  [@@deriving show, yojson]
+    { scale_: Scale.t  (** Scale Setting *)
+    ; value_: Zv.t  (** Integer Value *) }
 
   (** {1 Construction} *)
   val make_dv : Scale.t * Zv.t -> t
-  (** Construct discrete value*)
+  (** [make_dv scale zv] constructs t with scale and zv*)
 
   val show_scale : t -> unit
-  (** Print the scale setting *)
+  (** [show_scale t] prints t's scale setting *)
 
   val show_val : t -> unit
-  (** Print the integer value *)
+  (** [show_val t] prints t's discrete integer value *)
 
   val show_t : t -> unit
-  (** Print the discrete value *)
+  (** [show_t t] prints t *)
 
   val neg : t -> t
-  (** Negate a discrete integer value *)
+  (** [neg t] negates t's discrete integer value *)
 
   val abs : t -> t
-  (** Return an absolute discrete integer value *)
+  (** [abs t] returns t's absolute discrete integer value *)
 
   val ( + ) : t -> t -> t
-  (** Add two discrete integer values *)
+  (** [t + qv] adds two t *)
 
   val ( - ) : t -> t -> t
-  (** Substract two discrete integer values *)
+  (** [t - qv] substract two t *)
 
-  val ( * ) : t:t -> value:Zv.t -> t
-  (** Multiply two discrete integer values *)
+  val ( * ) : t -> Zv.t -> t
+  (** [t * qv] multiplies t's value part with a discrete integer values *)
 
   val to_json : t -> string
-  (** Convert t to json *)
+  (** [to_json t] converts t to json string *)
+
+  val to_sexp : t -> Base.Sexp.t
+  (** [to_sexp t] converts t to sexp*)
 end
