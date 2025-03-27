@@ -26,13 +26,13 @@ module Make (Qv : Qv_intf.S) (Zv : Zv_intf.S) = struct
       if check_scale value_ then {symbol_= sym; sub_unit_= sub_unit; value_}
       else raise (ValidScaleError "Valid scale must be greater than 0")
 
-    let to_json x =
+    let to_json t =
       Yojson.Safe.to_string
       @@ showable_to_yojson
            { kind= "scale_value"
-           ; symbol= x.symbol_
-           ; sub_unit= x.sub_unit_
-           ; value= Qv.S.to_str x.value_ }
+           ; symbol= t.symbol_
+           ; sub_unit= t.sub_unit_
+           ; value= Qv.S.to_str t.value_ }
 
     let showable_of_t t =
       { kind= "scale_value"

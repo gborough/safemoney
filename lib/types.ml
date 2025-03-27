@@ -56,10 +56,10 @@ module type Custom = sig
   val make_dv : string -> Zv.t -> Discrete.t option
 end
 
-let make_q v = Qv.S.make v
+let make_q str = Qv.S.make str
 
-let make_z v = Zv.S.make v
+let make_z str = Zv.S.make str
 
-let q_to_str s = Qv.S.to_str s
+let q_to_str qv = Qv.S.to_str qv
 
-let z_to_str s = Zv.S.to_str s
+let z_to_str zv = Zv.S.to_str zv
