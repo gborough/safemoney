@@ -8,6 +8,7 @@ Breaking changes:
 * Labelled function changes on Discrete, Exchange and Quotient types
 * Removed deriving show on all types
 * Removed printing support for Zv and Qv
+* Removed functors for core types
 
 ## 0.2.0 (2024-04-26)
 
