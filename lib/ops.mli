@@ -1,4 +1,3 @@
-open Types
 open Stdint
 
 (** Type of rounding strategies*)

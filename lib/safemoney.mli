@@ -1,6 +1,6 @@
-module Discrete = Types.Discrete
-module Exchange = Types.Exchange
-module Quotient = Types.Quotient
+module Discrete = Discrete
+module Exchange = Exchange
+module Quotient = Quotient
 module Predefined = Predefined
 module Ops = Ops
 

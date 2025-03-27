@@ -1,6 +1,5 @@
 open Base
 open Stdint
-open Types
 
 type rounding =
   | Up
