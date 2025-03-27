@@ -174,7 +174,7 @@ let%expect_test "unsafe_float_to_discrete" =
   let open Discrete.Scale in
   let scale = make_scale ~sym:"GBP" ~sub_unit:"Penny" (make_q "100/1") in
   let r = unsafe_float_to_discrete ~scale ~integer:123 in
-  Discrete.to_json r |> print_endline ;
+  Yojson.Safe.to_string @@ Discrete.to_json r |> print_endline ;
   [%expect
     {|{"kind":"discrete_value","symbol":"GBP","sub_unit":"Penny","scale_value":"100/1","discrete_value":"123"}|}]
 

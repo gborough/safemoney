@@ -42,11 +42,8 @@ let ( * ) t qv = {t with value_= Qv.S.mul t.value_ qv}
 let ( / ) t qv = {t with value_= Qv.S.div t.value_ qv}
 
 let to_json x =
-  Yojson.Safe.to_string
-  @@ showable_to_yojson
-       { kind= "quotient_value"
-       ; symbol= x.symbol_
-       ; value= Qv.S.to_str x.value_ }
+  showable_to_yojson
+    {kind= "quotient_value"; symbol= x.symbol_; value= Qv.S.to_str x.value_}
 
 let showable_of_t t =
   {kind= "quotient_value"; symbol= t.symbol_; value= Qv.S.to_str t.value_}

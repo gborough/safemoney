@@ -20,7 +20,7 @@ val ( **> ) : t -> t -> t
 val xchg_recip : t -> t
 (** [xchg_recip t] applies reciprocal to exchange rate, xchg_recip (xchg_recip xchg) = id *)
 
-val to_json : t -> string
+val to_json : t -> Yojson.Safe.t
 (** [to_json t] converts t to json string *)
 
 val to_sexp : t -> Base.Sexp.t

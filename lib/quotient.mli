@@ -39,7 +39,7 @@ val ( / ) : t -> Qv.t -> t
 (** [t / qv] divides a t with a plain rational value.
       Dividing two quotient values does not make sense for currency ops *)
 
-val to_json : t -> string
+val to_json : t -> Yojson.Safe.t
 (** [to_json t] converts t to json string *)
 
 val to_sexp : t -> Base.Sexp.t

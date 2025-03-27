@@ -32,12 +32,11 @@ let xchg_recip t =
   {src_= t.dst_; dst_= t.src_; value_= Qv.S.div (Qv.S.one ()) t.value_}
 
 let to_json t =
-  Yojson.Safe.to_string
-  @@ showable_to_yojson
-       { kind= "exchange_rate"
-       ; src= t.src_
-       ; dst= t.dst_
-       ; value= Qv.S.to_str t.value_ }
+  showable_to_yojson
+    { kind= "exchange_rate"
+    ; src= t.src_
+    ; dst= t.dst_
+    ; value= Qv.S.to_str t.value_ }
 
 let showable_of_t t =
   { kind= "exchange_rate"

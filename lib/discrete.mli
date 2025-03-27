@@ -18,7 +18,7 @@ module Scale : sig
   val make_scale : sym:string -> sub_unit:string -> Qv.t -> t
   (** [make_scale symbol subunit qv] makes exchange rate, e.g. make_scale "GBP" "penny" make_q("100/1") *)
 
-  val to_json : t -> string
+  val to_json : t -> Yojson.Safe.t
   (** [to_json t] converts t to json *)
 
   val to_sexp : t -> Base.Sexp.t
@@ -57,7 +57,7 @@ val ( - ) : t -> t -> t
 val ( * ) : t -> Zv.t -> t
 (** [t * qv] multiplies t's value part with a discrete integer values *)
 
-val to_json : t -> string
+val to_json : t -> Yojson.Safe.t
 (** [to_json t] converts t to json string *)
 
 val to_sexp : t -> Base.Sexp.t

@@ -22,12 +22,11 @@ module Scale = struct
     else raise (ValidScaleError "Valid scale must be greater than 0")
 
   let to_json t =
-    Yojson.Safe.to_string
-    @@ showable_to_yojson
-         { kind= "scale_value"
-         ; symbol= t.symbol_
-         ; sub_unit= t.sub_unit_
-         ; value= Qv.S.to_str t.value_ }
+    showable_to_yojson
+      { kind= "scale_value"
+      ; symbol= t.symbol_
+      ; sub_unit= t.sub_unit_
+      ; value= Qv.S.to_str t.value_ }
 
   let showable_of_t t =
     { kind= "scale_value"
@@ -84,13 +83,12 @@ let ( - ) t1 t2 =
 let ( * ) t value = {t with value_= Zv.S.mul t.value_ value}
 
 let to_json t =
-  Yojson.Safe.to_string
-  @@ showable_to_yojson
-       { kind= "discrete_value"
-       ; symbol= t.scale_.symbol_
-       ; sub_unit= t.scale_.sub_unit_
-       ; s_value= Qv.S.to_str t.scale_.value_
-       ; value= Zv.S.to_str t.value_ }
+  showable_to_yojson
+    { kind= "discrete_value"
+    ; symbol= t.scale_.symbol_
+    ; sub_unit= t.scale_.sub_unit_
+    ; s_value= Qv.S.to_str t.scale_.value_
+    ; value= Zv.S.to_str t.value_ }
 
 let showable_of_t t =
   { kind= "discrete_value"
