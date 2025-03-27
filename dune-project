@@ -35,4 +35,5 @@
   ppx_deriving
   ppx_deriving_yojson
   ppx_jane
+  sexplib
   (ppx_expect :with-test)))

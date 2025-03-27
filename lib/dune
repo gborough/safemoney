@@ -8,6 +8,7 @@
   angstrom
   re
   yojson
-  ppx_deriving_yojson.runtime)
+  ppx_deriving_yojson.runtime
+  sexplib)
  (preprocess
   (pps ppx_jane ppx_deriving_yojson ppx_deriving.show ppx_sexp_conv)))
