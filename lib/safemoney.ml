@@ -3,6 +3,8 @@ module Exchange = Exchange
 module Quotient = Quotient
 module Predefined = Predefined
 module Ops = Ops
+module Qv = Qv
+module Zv = Zv
 
 let make_q str = Utils.make_q str
 
